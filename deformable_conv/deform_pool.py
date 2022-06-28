@@ -186,7 +186,7 @@ class DeformRoIPoolingPack(DeformRoIPooling):
         self.num_offset_fcs = num_offset_fcs
         self.deform_fc_channels = deform_fc_channels
         self.offset_size = (3, 3)
-        self.awp = AWPool(256)
+        self.awp = AWPool(out_channels)
         self.awp.init_layer()
 
         if not no_trans:
