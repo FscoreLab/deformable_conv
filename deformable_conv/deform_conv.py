@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 from torch.nn.modules.utils import _pair, _single
-
+from torchvision.ops import deform_conv2d
 from . import deform_conv_ext
 
 
@@ -343,9 +343,9 @@ class DeformConvPack(DeformConv):
         o1, o2, mask = torch.chunk(out, 3, dim=1)
         offset = torch.cat((o1, o2), dim=1)
         mask = torch.sigmoid(mask)
-        return modulated_deform_conv(
-            x, offset, mask, self.weight, self.stride, self.padding, self.dilation, self.groups, self.deformable_groups
-        )
+        output = deform_conv2d(x, offset, self.weight, stride=self.stride, padding=self.padding,
+                               mask=mask, dilation=self.dilation )
+        return output
 
     def _load_from_state_dict(
         self, state_dict, prefix, local_metadata, strict, missing_keys, unexpected_keys, error_msgs
